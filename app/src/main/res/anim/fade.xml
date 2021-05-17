@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--transparencia, se hara visible en 600 milisegundos-->
+    <alpha android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:duration="600"/>
+
+</set>

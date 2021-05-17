@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.HwreciclerviewAPH" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#ff9e22</item>
+        <item name="colorPrimaryVariant">#ee6002</item>
+        <item name="colorOnPrimary">#fff2df</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#FFEE58</item>
+        <item name="colorSecondaryVariant">#FDD835</item>
+        <item name="colorOnSecondary">#F57F17</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+</resources>
