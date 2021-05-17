@@ -2,6 +2,8 @@ package com.example.hwreciclerviewaph;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -20,12 +23,15 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class MainActivity extends AppCompatActivity {
     //lista de todos los elementos
     List<ListElement> elemets;
+    //int gridColumnCount =
+    //        getResources().getInteger(R.integer.grid_column_count);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+
     }
 
     public void init(){
@@ -266,7 +272,74 @@ public class MainActivity extends AppCompatActivity {
         ListAdapter listAdapter = new ListAdapter(elemets, this);
         RecyclerView recyclerView = findViewById(R.id.listRecyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));//manager lineal
+       // recyclerView.setLayoutManager(new LinearLayoutManager(this));//manager lineal
+
+        // Get the appropriate column count.
+        int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
+
+        // Set the Layout Manager.
+        recyclerView.setLayoutManager(new GridLayoutManager(
+                this, gridColumnCount));
+       // recyclerView.setLayoutManager(new
+         //       GridLayoutManager(this, gridColumnCount));
+
+        // If there is more than one column, disable swipe to dismiss
+        int swipeDirs;
+        if(gridColumnCount > 1){
+            swipeDirs = 0;
+        } else {
+            swipeDirs = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+        }
+
+        // Helper class for creating swipe to dismiss and drag and drop
+        // functionality
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper
+                .SimpleCallback(
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT |
+                        ItemTouchHelper.DOWN | ItemTouchHelper.UP,
+                swipeDirs) {
+            /**
+             * Defines the drag and drop functionality.
+             *
+             * @param recyclerView The RecyclerView that contains the list items.
+             * @param viewHolder The SportsViewHolder that is being moved.
+             * @param target The SportsViewHolder that you are switching the
+             *               original one with.
+             * @return returns true if the item was moved, false otherwise
+             */
+            @Override
+            public boolean onMove(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                // Get the from and to positions.
+                int from = viewHolder.getAdapterPosition();
+                int to = target.getAdapterPosition();
+
+                // Swap the items and notify the adapter.
+                Collections.swap(elemets, from, to);
+                listAdapter.notifyItemMoved(from, to);
+                return true;
+            }
+
+            /**
+             * Defines the swipe to dismiss functionality.
+             *
+             * @param viewHolder The viewholder being swiped.
+             * @param direction The direction it is swiped in.
+             */
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder,
+                                 int direction) {
+                // Remove the item from the dataset.
+                elemets.remove(viewHolder.getAdapterPosition());
+                // Notify the adapter.
+                listAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        });
+
+        // Attach the helper to the RecyclerView.
+        helper.attachToRecyclerView(recyclerView);
+
 
        //agregando el onclicllistener para ir a la otra activity
         listAdapter.setOnClickListener(new View.OnClickListener(){
